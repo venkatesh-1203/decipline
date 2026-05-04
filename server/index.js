@@ -11,6 +11,7 @@ dotenv.config();
 const app = express();
 const PORT = Number(process.env.PORT || 5000);
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5500";
+const PRODUCT_NAME = process.env.PRODUCT_NAME || "Discipline Blueprint PDF";
 const PRODUCT_PRICE_INR = Number(process.env.PRODUCT_PRICE_INR || 49);
 const PRODUCT_PDF_PATH =
   process.env.PRODUCT_PDF_PATH || path.join(__dirname, "products", "You.pdf");
@@ -89,7 +90,9 @@ app.get("/api/health", (_, res) => {
 app.get("/api/config", (_, res) => {
   res.json({
     razorpayKeyId: process.env.RAZORPAY_KEY_ID || "",
-    productPriceInr: PRODUCT_PRICE_INR
+    productPriceInr: PRODUCT_PRICE_INR,
+    currency: "INR",
+    productName: PRODUCT_NAME
   });
 });
 
@@ -103,14 +106,15 @@ app.post("/api/create-order", async (req, res) => {
       currency: "INR",
       receipt,
       notes: {
-        product: "Digital PDF Product"
+        product: PRODUCT_NAME
       }
     });
 
     res.json({
       orderId: order.id,
       amount: order.amount,
-      currency: order.currency
+      currency: order.currency,
+      productName: PRODUCT_NAME
     });
   } catch (error) {
     console.error("Create order error:", error);
@@ -121,7 +125,7 @@ app.post("/api/create-order", async (req, res) => {
   }
 });
 
-app.post("/api/verify-payment", (req, res) => {
+app.post("/api/verify-payment", async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body || {};
 
@@ -141,6 +145,15 @@ app.post("/api/verify-payment", (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Payment verification failed. Signature mismatch."
+      });
+    }
+
+    // Extra safety: fetch payment from Razorpay and verify relation + capture status.
+    const payment = await razorpay.payments.fetch(razorpay_payment_id);
+    if (!payment || payment.order_id !== razorpay_order_id || payment.status !== "captured") {
+      return res.status(400).json({
+        success: false,
+        message: "Payment verification failed. Invalid payment state."
       });
     }
 

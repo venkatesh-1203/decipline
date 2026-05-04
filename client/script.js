@@ -2,6 +2,10 @@ const buyBtn = document.getElementById("buyBtn");
 const statusText = document.getElementById("statusText");
 const priceText = document.getElementById("priceText");
 const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || "http://localhost:5000";
+let productConfig = {
+  productName: "Discipline Blueprint PDF",
+  currency: "INR"
+};
 
 function setLoadingState(isLoading, text = "") {
   buyBtn.disabled = isLoading;
@@ -13,6 +17,12 @@ async function loadConfig() {
   try {
     const response = await fetch(`${API_BASE_URL}/api/config`);
     const data = await response.json();
+    if (data?.productName) {
+      productConfig.productName = data.productName;
+    }
+    if (data?.currency) {
+      productConfig.currency = data.currency;
+    }
     if (data?.productPriceInr) {
       priceText.textContent = `₹${data.productPriceInr}`;
     }
@@ -66,7 +76,7 @@ async function startPayment() {
       key: config.razorpayKeyId,
       amount: orderData.amount,
       currency: orderData.currency,
-      name: "DigitalProduct",
+      name: config.productName || productConfig.productName,
       description: "Instant PDF Access",
       order_id: orderData.orderId,
       handler: async function (response) {
