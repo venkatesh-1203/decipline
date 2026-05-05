@@ -36,7 +36,7 @@ const corsOptions = {
 
     const isProduction = process.env.NODE_ENV === "production";
     const allowedOrigins = [
-      "https://decipline-fgkye3zsq-venkatesh-1203s-projects.vercel.app",
+      "https://deciplinetrackee.netlify.app",
       FRONTEND_URL
     ];
 
@@ -60,7 +60,9 @@ const corsOptions = {
     callback(new Error("Not allowed by CORS"));
   },
   methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
+  maxAge: 3600,
   optionsSuccessStatus: 200
 };
 
