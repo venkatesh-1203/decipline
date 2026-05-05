@@ -85,7 +85,7 @@ async function startPayment() {
           const verifyData = await verifyPayment(response);
 
           const successUrl = new URL("./success.html", window.location.href);
-          successUrl.searchParams.set("download", `${API_BASE_URL}${verifyData.downloadUrl}`);
+          successUrl.searchParams.set("download", "https://drive.google.com/file/d/1zOWamDlF3fF297n6BhFvuoyImSky1XdC/view?usp=sharing");
           window.location.href = successUrl.toString();
         } catch (error) {
           console.error(error);
