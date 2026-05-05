@@ -27,12 +27,44 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET || ""
 });
 
-app.use(
-  cors({
-    origin: FRONTEND_URL,
-    methods: ["GET", "POST"]
-  })
-);
+// CORS configuration with origin validation
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    const isProduction = process.env.NODE_ENV === "production";
+    const allowedOrigins = [
+      "https://decipline-fgkye3zsq-venkatesh-1203s-projects.vercel.app",
+      FRONTEND_URL
+    ];
+
+    // Development: Allow all localhost/127.0.0.1 variants
+    if (!isProduction) {
+      const isLocalhost =
+        origin.startsWith("http://localhost:") ||
+        origin.startsWith("http://127.0.0.1:") ||
+        origin === "http://localhost" ||
+        origin === "http://127.0.0.1";
+      if (isLocalhost) {
+        return callback(null, true);
+      }
+    }
+
+    // Production: Only allow listed origins
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    callback(new Error("Not allowed by CORS"));
+  },
+  methods: ["GET", "POST", "OPTIONS"],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 function base64UrlEncode(input) {
