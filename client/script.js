@@ -1,7 +1,7 @@
 const buyBtn = document.getElementById("buyBtn");
 const statusText = document.getElementById("statusText");
 const priceText = document.getElementById("priceText");
-const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || "http://localhost:5000";
+const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || "https://deciplinetrackee.netlify.app/";
 let productConfig = {
   productName: "Discipline Blueprint PDF",
   currency: "INR"
