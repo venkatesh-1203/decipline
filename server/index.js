@@ -27,6 +27,26 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET || ""
 });
 
+function normalizeOrigin(origin) {
+  if (!origin) {
+    return "";
+  }
+
+  return origin.trim().replace(/\/+$/, "");
+}
+
+const allowedOrigins = new Set(
+  [
+    "https://deciplinetrackee.netlify.app",
+    "https://discipline-2.onrender.com",
+    FRONTEND_URL,
+    "http://localhost:3000",
+    "http://localhost:5000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5000"
+  ].map(normalizeOrigin)
+);
+
 // CORS configuration with origin validation
 const corsOptions = {
   origin: function (origin, callback) {
@@ -34,26 +54,14 @@ const corsOptions = {
       return callback(null, true);
     }
 
-    const isProduction = process.env.NODE_ENV === "production";
-    const allowedOrigins = [
-      "https://deciplinetrackee.netlify.app",
-      FRONTEND_URL
-    ];
+    const normalizedOrigin = normalizeOrigin(origin);
 
-    // Development: Allow all localhost/127.0.0.1 variants
-    if (!isProduction) {
-      const isLocalhost =
-        origin.startsWith("http://localhost:") ||
-        origin.startsWith("http://127.0.0.1:") ||
-        origin === "http://localhost" ||
-        origin === "http://127.0.0.1";
-      if (isLocalhost) {
-        return callback(null, true);
-      }
-    }
+    // Allow localhost variants in development
+    const isLocalhost =
+      normalizedOrigin.startsWith("http://localhost:") ||
+      normalizedOrigin.startsWith("http://127.0.0.1:");
 
-    // Production: Only allow listed origins
-    if (allowedOrigins.includes(origin)) {
+    if (isLocalhost || allowedOrigins.has(normalizedOrigin)) {
       return callback(null, true);
     }
 
@@ -67,6 +75,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(express.json());
 
 function base64UrlEncode(input) {
