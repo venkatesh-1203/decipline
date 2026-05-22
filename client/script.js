@@ -1,11 +1,21 @@
 const buyBtn = document.getElementById("buyBtn");
 const statusText = document.getElementById("statusText");
 const priceText = document.getElementById("priceText");
-const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || "https://deciplinetrackee.netlify.app/";
+const defaultOrigin = window.location.protocol === "file:" ? "http://localhost:5000" : window.location.origin;
+const inferredBackend = window.location.hostname === "deciplinetrackee.netlify.app"
+  ? "https://decipline-2.onrender.com"
+  : window.location.hostname === "decipline-2.onrender.com"
+    ? window.location.origin
+    : defaultOrigin;
+const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || inferredBackend;
 let productConfig = {
   productName: "Discipline Blueprint PDF",
   currency: "INR"
 };
+
+function absoluteApiUrl(path) {
+  return new URL(path, API_BASE_URL).toString();
+}
 
 function setLoadingState(isLoading, text = "") {
   buyBtn.disabled = isLoading;
@@ -13,10 +23,25 @@ function setLoadingState(isLoading, text = "") {
   statusText.textContent = text;
 }
 
+async function readJsonResponse(response, fallbackMessage) {
+  let data = {};
+  try {
+    data = await response.json();
+  } catch (error) {
+    throw new Error(fallbackMessage);
+  }
+
+  if (!response.ok) {
+    throw new Error(data.message || fallbackMessage);
+  }
+
+  return data;
+}
+
 async function loadConfig() {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/config`);
-    const data = await response.json();
+    const response = await fetch(absoluteApiUrl("/api/config"));
+    const data = await readJsonResponse(response, "Unable to load payment settings.");
     if (data?.productName) {
       productConfig.productName = data.productName;
     }
@@ -24,35 +49,32 @@ async function loadConfig() {
       productConfig.currency = data.currency;
     }
     if (data?.productPriceInr) {
-      priceText.textContent = `₹${data.productPriceInr}`;
+      priceText.textContent = `Rs. ${data.productPriceInr}`;
     }
   } catch (error) {
     console.error("Could not load config:", error);
+    setLoadingState(false, "Unable to reach payment server. Check backend URL or network.");
   }
 }
 
 async function createOrder() {
-  const response = await fetch(`${API_BASE_URL}/api/create-order`, {
+  const response = await fetch(absoluteApiUrl("/api/create-order"), {
     method: "POST",
     headers: { "Content-Type": "application/json" }
   });
 
-  if (!response.ok) {
-    throw new Error("Failed to create order");
-  }
-
-  return response.json();
+  return readJsonResponse(response, "Failed to create order.");
 }
 
 async function verifyPayment(paymentResponse) {
-  const response = await fetch(`${API_BASE_URL}/api/verify-payment`, {
+  const response = await fetch(absoluteApiUrl("/api/verify-payment"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(paymentResponse)
   });
 
-  const data = await response.json();
-  if (!response.ok || !data.success) {
+  const data = await readJsonResponse(response, "Verification failed");
+  if (!data.success) {
     throw new Error(data.message || "Verification failed");
   }
 
@@ -61,10 +83,14 @@ async function verifyPayment(paymentResponse) {
 
 async function startPayment() {
   try {
+    if (typeof Razorpay === "undefined") {
+      throw new Error("Payment checkout could not load. Please refresh and try again.");
+    }
+
     setLoadingState(true, "Creating your secure order...");
 
-    const configRes = await fetch(`${API_BASE_URL}/api/config`);
-    const config = await configRes.json();
+    const configRes = await fetch(absoluteApiUrl("/api/config"));
+    const config = await readJsonResponse(configRes, "Unable to load payment settings.");
 
     if (!config.razorpayKeyId) {
       throw new Error("Razorpay key not configured on server.");
@@ -85,7 +111,7 @@ async function startPayment() {
           const verifyData = await verifyPayment(response);
 
           const successUrl = new URL("./success.html", window.location.href);
-          successUrl.searchParams.set("download", "https://drive.google.com/file/d/1zOWamDlF3fF297n6BhFvuoyImSky1XdC/view?usp=sharing");
+          successUrl.searchParams.set("download", absoluteApiUrl(verifyData.downloadUrl));
           window.location.href = successUrl.toString();
         } catch (error) {
           console.error(error);
@@ -115,7 +141,7 @@ async function startPayment() {
     razorpayCheckout.open();
   } catch (error) {
     console.error(error);
-    setLoadingState(false, "Something went wrong. Please try again.");
+    setLoadingState(false, error?.message || "Something went wrong. Please try again.");
   }
 }
 

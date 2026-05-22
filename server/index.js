@@ -38,12 +38,13 @@ function normalizeOrigin(origin) {
 const allowedOrigins = new Set(
   [
     "https://deciplinetrackee.netlify.app",
-    "https://discipline-2.onrender.com",
+    "https://decipline-2.onrender.com",
     FRONTEND_URL,
     "http://localhost:3000",
     "http://localhost:5000",
     "http://127.0.0.1:3000",
-    "http://127.0.0.1:5000"
+    "http://127.0.0.1:5000",
+    "null"
   ].map(normalizeOrigin)
 );
 
@@ -55,6 +56,9 @@ const corsOptions = {
     }
 
     const normalizedOrigin = normalizeOrigin(origin);
+    if (normalizedOrigin === "null") {
+      return callback(null, true);
+    }
 
     // Allow localhost variants in development
     const isLocalhost =
@@ -240,6 +244,6 @@ app.get("/download", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
 
