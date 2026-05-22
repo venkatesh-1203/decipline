@@ -15,6 +15,9 @@ const PRODUCT_NAME = process.env.PRODUCT_NAME || "Discipline Blueprint PDF";
 const PRODUCT_PRICE_INR = Number(process.env.PRODUCT_PRICE_INR || 49);
 const PRODUCT_PDF_PATH =
   process.env.PRODUCT_PDF_PATH || path.join(__dirname, "products", "You.pdf");
+const PRODUCT_DOWNLOAD_URL =
+  process.env.PRODUCT_DOWNLOAD_URL ||
+  "https://drive.google.com/uc?export=download&id=1zOWamDlF3fF297n6BhFvuoyImSky1XdC";
 const DOWNLOAD_TOKEN_SECRET =
   process.env.DOWNLOAD_TOKEN_SECRET || process.env.RAZORPAY_KEY_SECRET || "fallback_secret";
 
@@ -233,11 +236,15 @@ app.get("/download", (req, res) => {
     const { token } = req.query;
     verifyDownloadToken(token);
 
-    if (!fs.existsSync(PRODUCT_PDF_PATH)) {
-      return res.status(404).send("Product file not found on server.");
+    if (PRODUCT_PDF_PATH && fs.existsSync(PRODUCT_PDF_PATH)) {
+      return res.download(PRODUCT_PDF_PATH, "digital-product.pdf");
     }
 
-    return res.download(PRODUCT_PDF_PATH, "digital-product.pdf");
+    if (PRODUCT_DOWNLOAD_URL) {
+      return res.redirect(PRODUCT_DOWNLOAD_URL);
+    }
+
+    return res.status(404).send("Product file not found on server.");
   } catch (error) {
     return res.status(403).send("Unauthorized or expired download link.");
   }

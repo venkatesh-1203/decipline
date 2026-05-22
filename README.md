@@ -54,6 +54,7 @@ digitalproduct/
    - `FRONTEND_URL=http://localhost:5500` (or your frontend URL)
    - `PRODUCT_PRICE_INR=49`
    - `PRODUCT_PDF_PATH=D:/You.pdf` (or correct absolute path)
+   - `PRODUCT_DOWNLOAD_URL=https://drive.google.com/uc?export=download&id=your_file_id` (hosted fallback for Render)
    - `DOWNLOAD_TOKEN_SECRET=your_random_secret`
 5. Start backend:
    - `npm start`
@@ -92,7 +93,7 @@ Then open `client/index.html` through that server URL.
 
 - Current config uses:
   - `PRODUCT_PDF_PATH=D:/You.pdf`
-- Make sure this file path exists on the server machine.
+- Make sure this file path exists on the server machine, or set `PRODUCT_DOWNLOAD_URL` to a public hosted file URL.
 - For production hosting, prefer object storage (S3/R2/GCS) or persistent disk path.
 
 ## Deployment
