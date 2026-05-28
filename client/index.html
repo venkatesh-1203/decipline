@@ -4,12 +4,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Digital Growth Blueprint | Instant PDF Access</title>
+  <title>Product Photography AI Prompt Vault | Instant HTML Access</title>
   <meta name="description"
-    content="Get the step-by-step PDF blueprint to launch and grow faster. Secure payment, instant access." />
+    content="Get 50 expert-crafted AI prompts for professional e-commerce product photography. Secure payment, instant browser access." />
   <meta name="robots" content="index,follow" />
-  <meta property="og:title" content="Digital Growth Blueprint" />
-  <meta property="og:description" content="A practical PDF to solve your growth bottlenecks with clear action steps." />
+  <meta property="og:title" content="Product Photography AI Prompt Vault" />
+  <meta property="og:description" content="An interactive HTML vault of 50 professional AI image prompts for e-commerce product photos." />
   <meta property="og:type" content="website" />
   <link rel="stylesheet" href="./styles.css" />
   <script>
@@ -18,34 +18,52 @@
     };
   </script>
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap");
 
     html {
       scroll-behavior: smooth;
     }
 
+    body.luxury-page {
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(247, 240, 226, 0.86) 34%, rgba(235, 247, 244, 0.88) 70%, rgba(250, 247, 255, 0.92)),
+        linear-gradient(90deg, rgba(201, 161, 88, 0.16), rgba(255, 255, 255, 0.1), rgba(89, 128, 122, 0.12));
+      color: #172033;
+      font-family: "Inter", sans-serif;
+    }
+
+    body.luxury-page::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(115deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 18%, rgba(201, 161, 88, 0.12) 34%, rgba(255, 255, 255, 0) 54%),
+        repeating-linear-gradient(90deg, rgba(23, 32, 51, 0.025) 0 1px, transparent 1px 80px);
+      animation: pageSheen 12s ease-in-out infinite alternate;
+    }
+
     .glass {
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(22px) saturate(150%);
     }
 
     .hero-heading {
-      font-family: "Sora", sans-serif;
+      font-family: "Playfair Display", serif;
+      letter-spacing: 0;
     }
 
     .gradient-text {
-      background: linear-gradient(90deg, #ffffff 0%, #67e8f9 45%, #a78bfa 100%);
+      background: linear-gradient(100deg, #162033 0%, #8a642e 46%, #3f746f 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
 
     .hero-glow {
-      position: absolute;
-      z-index: -1;
-      border-radius: 9999px;
-      filter: blur(40px);
-      opacity: 0.75;
-      animation: floatGlow 4s ease-in-out infinite;
+      display: none;
     }
 
     .hero-glow-one {
@@ -65,6 +83,254 @@
       animation-delay: 0.8s;
     }
 
+    .media-panel {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 1.25rem;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(255, 250, 240, 0.44));
+      box-shadow: 0 28px 80px rgba(74, 57, 31, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px) saturate(140%);
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .media-panel::after {
+      content: "";
+      position: absolute;
+      inset: -60% auto auto -40%;
+      width: 45%;
+      height: 220%;
+      transform: rotate(18deg);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+      animation: glassSweep 7s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .hero-preview-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hero-preview-card,
+    .gallery-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.54);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    }
+
+    .hero-preview-card img {
+      display: block;
+      height: auto;
+      width: auto;
+      max-width: 100%;
+      max-height: min(54vh, 36rem);
+      object-fit: contain;
+    }
+
+    .gallery-track {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      padding: 0.25rem 0 1rem;
+    }
+
+    .gallery-card {
+      flex: 0 0 clamp(220px, 76vw, 340px);
+      height: min(64vh, 28rem);
+      scroll-snap-align: start;
+    }
+
+    .gallery-card img {
+      display: block;
+      height: auto;
+      width: auto;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    @media (max-width: 640px) {
+      .hero-preview-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .luxury-page header {
+      background: rgba(255, 255, 255, 0.68) !important;
+      border-color: rgba(201, 161, 88, 0.22) !important;
+      box-shadow: 0 14px 44px rgba(74, 57, 31, 0.08);
+    }
+
+    .luxury-page header p {
+      color: #8a642e !important;
+    }
+
+    .luxury-page main>section {
+      animation: fadeUp 0.85s ease both;
+    }
+
+    .luxury-page main>section:nth-child(2) {
+      animation-delay: 0.08s;
+    }
+
+    .luxury-page main>section:nth-child(3) {
+      animation-delay: 0.12s;
+    }
+
+    .luxury-page h2 {
+      color: #172033;
+      font-family: "Playfair Display", serif;
+      letter-spacing: 0;
+    }
+
+    .luxury-page .text-slate-100,
+    .luxury-page .text-slate-200 {
+      color: #172033 !important;
+    }
+
+    .luxury-page .text-slate-300,
+    .luxury-page .text-slate-400 {
+      color: #546070 !important;
+    }
+
+    .luxury-page .text-cyan-200,
+    .luxury-page .text-cyan-300 {
+      color: #8a642e !important;
+    }
+
+    .luxury-page .bg-slate-900,
+    .luxury-page .bg-slate-950,
+    .luxury-page .bg-slate-900\/40,
+    .luxury-page .bg-slate-950\/90,
+    .luxury-page .bg-cyan-500\/10 {
+      background: rgba(255, 255, 255, 0.58) !important;
+      backdrop-filter: blur(18px) saturate(135%);
+    }
+
+    .luxury-page .border-white\/10,
+    .luxury-page .border-cyan-400\/40,
+    .luxury-page .border-slate-700 {
+      border-color: rgba(201, 161, 88, 0.24) !important;
+    }
+
+    .luxury-page li,
+    .luxury-page .md\:grid-cols-3>div,
+    .luxury-page .md\:grid-cols-5>div,
+    .luxury-page #pricing>div {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(255, 250, 240, 0.46)) !important;
+      border-color: rgba(201, 161, 88, 0.24) !important;
+      box-shadow: 0 18px 48px rgba(74, 57, 31, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(16px);
+      transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+    }
+
+    .luxury-page li:hover,
+    .luxury-page .md\:grid-cols-3>div:hover,
+    .luxury-page .md\:grid-cols-5>div:hover,
+    .luxury-page .media-panel:hover {
+      transform: translateY(-4px);
+      border-color: rgba(178, 132, 48, 0.45) !important;
+      box-shadow: 0 24px 70px rgba(74, 57, 31, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.92);
+    }
+
+    .luxury-page .bg-cyan-500,
+    .luxury-page button.bg-cyan-500,
+    .luxury-page a.bg-cyan-500 {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #172033, #7d5a28 52%, #b9914f) !important;
+      color: #fffaf0 !important;
+      box-shadow: 0 18px 34px rgba(125, 90, 40, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .luxury-page .bg-cyan-500::after,
+    .luxury-page button.bg-cyan-500::after,
+    .luxury-page a.bg-cyan-500::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-120%);
+      background: linear-gradient(110deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+      transition: transform 0.7s ease;
+    }
+
+    .luxury-page .bg-cyan-500:hover::after,
+    .luxury-page button.bg-cyan-500:hover::after,
+    .luxury-page a.bg-cyan-500:hover::after {
+      transform: translateX(120%);
+    }
+
+    .luxury-page a.border {
+      background: rgba(255, 255, 255, 0.48);
+      color: #172033;
+      border-color: rgba(201, 161, 88, 0.32) !important;
+      backdrop-filter: blur(14px);
+    }
+
+    .luxury-page #priceText {
+      color: #8a642e;
+      font-family: "Playfair Display", serif;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .luxury-page footer {
+      background: rgba(255, 255, 255, 0.38);
+      border-color: rgba(201, 161, 88, 0.22) !important;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes glassSweep {
+      0%,
+      45% {
+        transform: translateX(0) rotate(18deg);
+        opacity: 0;
+      }
+
+      55% {
+        opacity: 0.85;
+      }
+
+      100% {
+        transform: translateX(420%) rotate(18deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes pageSheen {
+      from {
+        opacity: 0.45;
+        transform: translateX(-1.5%);
+      }
+
+      to {
+        opacity: 0.9;
+        transform: translateX(1.5%);
+      }
+    }
+
     @keyframes floatGlow {
 
       0%,
@@ -81,7 +347,7 @@
   </style>
 </head>
 
-<body class="bg-slate-950 text-slate-100 antialiased">
+<body class="luxury-page antialiased">
   <header class="sticky top-0 z-20 border-b border-white/10 bg-slate-950/90 glass">
     <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
       <p class="font-semibold tracking-wide text-cyan-300">DigitalProduct</p>
@@ -103,12 +369,12 @@
           <span class="hero-glow hero-glow-one"></span>
           <span class="hero-glow hero-glow-two"></span>
           <h1 class="hero-heading gradient-text text-4xl font-extrabold leading-tight md:text-5xl">
-            Stop guessing. Use a proven roadmap to grow faster.
+            Stop Paying for Product Photography. Start Generating It.
           </h1>
         </div>
         <p class="mt-4 max-w-xl text-slate-300">
-          This practical PDF gives you a clear, step-by-step framework to eliminate trial-and-error and get
-          results in less time.
+          50 expert-crafted AI prompts that turn any AI image tool into a professional e-commerce photo studio - in
+          seconds. No camera. No studio. No photographer.
         </p>
         <div class="mt-8 flex flex-wrap gap-4">
           <a href="#pricing"
@@ -121,68 +387,139 @@
           </a>
         </div>
       </div>
-      <div class="rounded-2xl border border-white/10 bg-slate-900 p-6 shadow-2xl shadow-cyan-900/20">
-        <img src="./habit.png" alt="Habit tracker preview"
-          class="h-auto max-h-[38rem] w-full rounded-xl object-contain bg-slate-950" loading="lazy" />
+      <div class="media-panel p-4 sm:p-6">
+        <div class="hero-preview-grid">
+          <div class="hero-preview-card">
+            <img src="./before-vs-after.png" alt="Before and after AI product photography examples" loading="lazy" />
+          </div>
+          <div class="hero-preview-card">
+            <img src="./bvsa.png" alt="Before and after skincare and lipstick product photography examples"
+              loading="lazy" />
+          </div>
+        </div>
         <p class="mt-4 text-sm text-slate-300">
-          Includes actionable templates, real-world examples, and a 30-day execution plan.
+          You will receive an interactive HTML file that works in any browser - no app needed, works offline, fully
+          searchable.
         </p>
+      </div>
+    </section>
+
+    <section class="border-y border-white/10 bg-slate-900/40 py-16">
+      <div class="mx-auto max-w-6xl px-6">
+        <h2 class="text-3xl font-bold">Generated Product Photo Examples</h2>
+        <p class="mt-3 max-w-3xl text-slate-300">
+          Product visuals created from detailed photography prompts: lighting, styling, surfaces, mood, and camera
+          direction all working together.
+        </p>
+        <div class="media-panel mt-8 p-3 sm:p-4">
+          <div class="gallery-track">
+            <div class="gallery-card">
+              <img src="./cream-jar-luxury.jpeg" alt="Luxury cream jar product photography example" loading="lazy" />
+            </div>
+            <div class="gallery-card">
+              <img src="./retouched-product-setup-1.jpeg" alt="Retouched product photography setup example"
+                loading="lazy" />
+            </div>
+            <div class="gallery-card">
+              <img src="./cinematic-white-shampoo.jpeg" alt="Cinematic white shampoo product photography example"
+                loading="lazy" />
+            </div>
+            <div class="gallery-card">
+              <img src="./retouched-product-setup-2.jpeg" alt="Styled product photography setup example"
+                loading="lazy" />
+            </div>
+            <div class="gallery-card">
+              <img src="./perfume-dark-swirls.jpeg"
+                alt="Perfume bottle with dark swirling smoke product photography example" loading="lazy" />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <section id="preview" class="border-y border-white/10 bg-slate-900/40 py-16">
       <div class="mx-auto max-w-6xl px-6">
-        <h2 class="text-3xl font-bold">What You Get Inside</h2>
+        <h2 class="text-3xl font-bold">Product Photography AI Prompt Vault</h2>
+        <p class="mt-4 max-w-4xl text-slate-300">
+          The Product Photography AI Prompt Vault is a collection of 50 professionally written AI image prompts built
+          specifically for e-commerce sellers. Each prompt is engineered with real photography language - lighting
+          setups, surface materials, color grades, depth of field - so your AI tool generates images that look like
+          they came from a Rs. 50,000 studio shoot. Works for skincare, supplements, food, fashion, tech, jewelry, and
+          any physical product.
+        </p>
         <ul class="mt-6 grid gap-4 md:grid-cols-2">
-          <li class="rounded-xl border border-white/10 bg-slate-900 p-4">personalised habit tracker</li>
-          <li class="rounded-xl border border-white/10 bg-slate-900 p-4">a discipline guide website</li>
-          <li class="rounded-xl border border-white/10 bg-slate-900 p-4">30 days discipline pdf guide</li>
-          <li class="rounded-xl border border-white/10 bg-slate-900 p-4">Mind refreshing techniques</li>
+          <li class="rounded-xl border border-white/10 bg-slate-900 p-4">50 ready-to-use AI prompts</li>
+          <li class="rounded-xl border border-white/10 bg-slate-900 p-4">7 professional photography categories</li>
+          <li class="rounded-xl border border-white/10 bg-slate-900 p-4">Interactive HTML vault with search and filter</li>
+          <li class="rounded-xl border border-white/10 bg-slate-900 p-4">One-click copy for every prompt</li>
+          <li class="rounded-xl border border-white/10 bg-slate-900 p-4">Bracket-based customization - no writing needed</li>
+          <li class="rounded-xl border border-white/10 bg-slate-900 p-4">Works with all major AI image generators</li>
+          <li class="rounded-xl border border-white/10 bg-slate-900 p-4">Lifetime access - yours forever</li>
         </ul>
       </div>
     </section>
 
     <section class="mx-auto max-w-6xl px-6 py-16">
-      <h2 class="text-3xl font-bold">From Pain to Progress</h2>
+      <h2 class="text-3xl font-bold">Built for E-Commerce Sellers</h2>
       <div class="mt-8 grid gap-4 md:grid-cols-3">
         <div class="rounded-xl border border-white/10 bg-slate-900 p-5">
-          <p class="text-sm text-red-300">Pain</p>
-          <p class="mt-2">Feeling stuck with random tactics and no clear direction.</p>
+          <p class="text-sm text-cyan-300">Tool Flexible</p>
+          <p class="mt-2">Works with Midjourney, Firefly, DALL-E 3, Canva AI, Stable Diffusion.</p>
         </div>
         <div class="rounded-xl border border-white/10 bg-slate-900 p-5">
-          <p class="text-sm text-emerald-300">Solution</p>
-          <p class="mt-2">Follow a structured framework designed for consistent results.</p>
+          <p class="text-sm text-cyan-300">50 Prompts</p>
+          <p class="mt-2">50 prompts across 7 categories: Lighting, Backgrounds, Styling, Mood, Technical, Lifestyle, Luxury.</p>
         </div>
         <div class="rounded-xl border border-white/10 bg-slate-900 p-5">
-          <p class="text-sm text-cyan-300">Transformation</p>
-          <p class="mt-2">Launch with confidence and see measurable progress faster.</p>
+          <p class="text-sm text-cyan-300">Easy Customization</p>
+          <p class="mt-2">Every prompt has [BRACKETS] - just swap your product name and generate.</p>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-slate-900 p-5">
+          <p class="text-sm text-cyan-300">Studio Quality</p>
+          <p class="mt-2">Studio-quality output: lighting specs, color grades, depth of field included in every prompt.</p>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-slate-900 p-5">
+          <p class="text-sm text-cyan-300">Searchable Vault</p>
+          <p class="mt-2">Interactive searchable vault - filter by category, search by keyword, copy in one click.</p>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-slate-900 p-5">
+          <p class="text-sm text-cyan-300">Lifetime Access</p>
+          <p class="mt-2">One-time payment, lifetime access, no subscription.</p>
         </div>
       </div>
     </section>
 
     <section class="border-y border-white/10 bg-slate-900/40 py-16">
       <div class="mx-auto max-w-6xl px-6">
-        <h2 class="text-3xl font-bold">Social Proof</h2>
-        <div class="mt-8 grid gap-4 md:grid-cols-3">
-          <blockquote class="rounded-xl border border-white/10 bg-slate-900 p-5 text-slate-300">
-            "I implemented this in one weekend and saw immediate clarity in my strategy."
-            <p class="mt-3 font-semibold text-slate-100">- Priya K.</p>
-          </blockquote>
-          <blockquote class="rounded-xl border border-white/10 bg-slate-900 p-5 text-slate-300">
-            "Simple, practical, and zero fluff. Exactly what I needed."
-            <p class="mt-3 font-semibold text-slate-100">- Arjun M.</p>
-          </blockquote>
-          <blockquote class="rounded-xl border border-white/10 bg-slate-900 p-5 text-slate-300">
-            "The checklist alone saved me weeks of trial and error."
-            <p class="mt-3 font-semibold text-slate-100">- Sneha R.</p>
-          </blockquote>
+        <h2 class="text-3xl font-bold">How It Works</h2>
+        <div class="mt-8 grid gap-4 md:grid-cols-5">
+          <div class="rounded-xl border border-white/10 bg-slate-900 p-5 text-slate-300">
+            <p class="font-semibold text-slate-100">Step 1</p>
+            <p class="mt-2">Open the vault, filter by category (Lighting / Luxury / Lifestyle etc.).</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-slate-900 p-5 text-slate-300">
+            <p class="font-semibold text-slate-100">Step 2</p>
+            <p class="mt-2">Click any prompt card to expand the full detailed prompt.</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-slate-900 p-5 text-slate-300">
+            <p class="font-semibold text-slate-100">Step 3</p>
+            <p class="mt-2">Replace the [BRACKETS] with your product name, color, and surface.</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-slate-900 p-5 text-slate-300">
+            <p class="font-semibold text-slate-100">Step 4</p>
+            <p class="mt-2">Copy the prompt and paste into your AI image tool.</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-slate-900 p-5 text-slate-300">
+            <p class="font-semibold text-slate-100">Step 5</p>
+            <p class="mt-2">Generate, refine aspect ratio and style, use the image in your store.</p>
+          </div>
         </div>
       </div>
     </section>
 
     <section id="pricing" class="mx-auto max-w-3xl px-6 py-16 text-center">
       <h2 class="text-3xl font-bold">One-Time Price. Lifetime Access.</h2>
-      <p class="mt-3 text-slate-300">Pay once and download instantly.</p>
+      <p class="mt-3 text-slate-300">Pay once and open the interactive HTML vault instantly.</p>
       <div class="mt-8 rounded-2xl border border-cyan-400/40 bg-cyan-500/10 p-8">
         <p class="text-sm uppercase tracking-widest text-cyan-300">Special Offer</p>
         <p id="priceText" class="mt-2 text-5xl font-extrabold">₹49</p>
@@ -194,11 +531,11 @@
       </div>
     </section>
 
-    <section class="bg-gradient-to-r from-cyan-500/20 to-indigo-500/20 py-16">
+    <section class="py-16">
       <div class="mx-auto max-w-5xl px-6 text-center">
-        <h2 class="text-3xl font-extrabold">Start Today. Your Future Self Will Thank You.</h2>
+        <h2 class="text-3xl font-extrabold">Create Studio-Quality Product Images Today.</h2>
         <p class="mt-3 text-slate-200">
-          Delay keeps you stuck. Take one smart step now and unlock your full roadmap instantly.
+          Unlock the Product Photography AI Prompt Vault and start generating polished product visuals in seconds.
         </p>
         <a href="#pricing"
           class="mt-6 inline-block rounded-xl bg-cyan-500 px-8 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400">

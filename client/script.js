@@ -8,8 +8,10 @@ const inferredBackend = window.location.hostname === "deciplinetrackee.netlify.a
     ? window.location.origin
     : defaultOrigin;
 const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || inferredBackend;
+const vaultFileUrl = "./ecommerce_product_photography_prompt_pack.html";
+const bonusPdfUrl = "./product-photography-ai-prompt-vault.pdf";
 let productConfig = {
-  productName: "Discipline Blueprint PDF",
+  productName: "Product Photography AI Prompt Vault",
   currency: "INR"
 };
 
@@ -81,6 +83,16 @@ async function verifyPayment(paymentResponse) {
   return data;
 }
 
+function downloadBonusPdf() {
+  const downloadLink = document.createElement("a");
+  downloadLink.href = bonusPdfUrl;
+  downloadLink.download = "product-photography-ai-prompt-vault.pdf";
+  downloadLink.style.display = "none";
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  downloadLink.remove();
+}
+
 async function startPayment() {
   try {
     if (typeof Razorpay === "undefined") {
@@ -103,16 +115,18 @@ async function startPayment() {
       amount: orderData.amount,
       currency: orderData.currency,
       name: config.productName || productConfig.productName,
-      description: "Instant PDF Access",
+      description: "Interactive HTML Vault Access",
       order_id: orderData.orderId,
       handler: async function (response) {
         try {
           setLoadingState(true, "Verifying your payment...");
-          const verifyData = await verifyPayment(response);
+          await verifyPayment(response);
 
-          const successUrl = new URL("./success.html", window.location.href);
-          successUrl.searchParams.set("download", absoluteApiUrl(verifyData.downloadUrl));
-          window.location.href = successUrl.toString();
+          downloadBonusPdf();
+          const vaultUrl = new URL(vaultFileUrl, window.location.href);
+          setTimeout(() => {
+            window.location.href = vaultUrl.toString();
+          }, 700);
         } catch (error) {
           console.error(error);
           const failedUrl = new URL("./failed.html", window.location.href);

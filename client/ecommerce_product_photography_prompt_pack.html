@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Photography AI Prompt Vault</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #020617;
+      --panel: #0f172a;
+      --panel-soft: #111c33;
+      --line: rgba(255, 255, 255, 0.1);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --cyan: #22d3ee;
+      --green: #34d399;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(2, 6, 23, 0.92);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .brand {
+      color: var(--cyan);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .hero {
+      padding: 56px 0 32px;
+    }
+
+    h1 {
+      max-width: 850px;
+      margin: 0;
+      font-size: clamp(2.2rem, 6vw, 4.8rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 760px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin: 28px 0 22px;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      padding: 14px 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: rgba(34, 211, 238, 0.8);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .filter,
+    .copy {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      padding: 10px 12px;
+    }
+
+    .filter.active {
+      background: var(--cyan);
+      color: #031018;
+      border-color: var(--cyan);
+    }
+
+    .count {
+      color: var(--muted);
+      margin: 0 0 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      padding-bottom: 48px;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 18px;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .tag {
+      color: var(--cyan);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin: 6px 0 0;
+      font-size: 1.05rem;
+      font-weight: 800;
+    }
+
+    .prompt {
+      border-top: 1px solid var(--line);
+      background: var(--panel-soft);
+      padding: 16px 18px 18px;
+    }
+
+    .prompt p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      white-space: pre-wrap;
+    }
+
+    .copy {
+      background: var(--green);
+      color: #02130d;
+      border-color: var(--green);
+    }
+
+    .empty {
+      display: none;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      padding: 24px;
+      text-align: center;
+    }
+
+    @media (min-width: 760px) {
+      .toolbar {
+        grid-template-columns: 1fr auto;
+        align-items: start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap topbar">
+      <div class="brand">Product Photography AI Prompt Vault</div>
+      <div class="count" id="headerCount">50 prompts</div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>50 e-commerce product photography prompts, ready to copy.</h1>
+      <p class="lead">
+        Filter by category, open any card, replace the bracketed details, and paste the prompt into Midjourney,
+        Firefly, DALL-E 3, Canva AI, Stable Diffusion, or your preferred image generator.
+      </p>
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="Search prompts by product, lighting, surface, mood, or keyword" />
+        <div class="filters" id="filters"></div>
+      </div>
+      <p class="count" id="count"></p>
+    </section>
+
+    <section class="grid" id="grid"></section>
+    <div class="empty" id="empty">No prompts match that search.</div>
+  </main>
+
+  <script>
+    const prompts = [
+      ["Lighting", "Softbox Hero Shot", "Professional e-commerce product photo of [PRODUCT] in [COLOR], placed on [SURFACE], lit with a large softbox at 45 degrees, subtle fill light, clean shadow falloff, crisp label detail, realistic reflections, 85mm lens, f/5.6, premium studio finish."],
+      ["Lighting", "Rim Light Drama", "High-end product photograph of [PRODUCT] on [SURFACE], deep background separation, bright rim light outlining the silhouette, soft front fill, controlled highlights, rich contrast, commercial studio quality, sharp edges, realistic texture."],
+      ["Lighting", "Window Light Natural", "Natural daylight product photo of [PRODUCT] near a large window, soft directional light, gentle shadows, [COLOR] accents, minimal styling, realistic e-commerce catalog feel, shallow depth of field, clean modern composition."],
+      ["Lighting", "Hard Light Editorial", "Editorial product image of [PRODUCT] on [SURFACE], hard directional sunlight, bold geometric shadows, high contrast, saturated color grade, crisp details, magazine-style composition, professional product photography."],
+      ["Lighting", "Gradient Glow", "Studio product photo of [PRODUCT] with a smooth cyan-to-violet gradient background, soft overhead key light, glossy reflections, controlled specular highlights, centered composition, premium DTC brand aesthetic."],
+      ["Lighting", "Floating Spotlight", "Commercial image of [PRODUCT] floating above [SURFACE], narrow spotlight from above, dark falloff around edges, soft bounce below, dramatic but clean, luxury e-commerce campaign style."],
+      ["Lighting", "Clean White Catalog", "Marketplace-ready product photograph of [PRODUCT] on pure white background, even studio lighting, shadow under product, true color accuracy, sharp focus, no props, professional catalog image."],
+      ["Lighting", "Golden Hour Glow", "Warm golden-hour product photo of [PRODUCT] on [SURFACE], soft amber highlights, long gentle shadows, natural premium mood, realistic lens depth, polished brand campaign look."],
+
+      ["Backgrounds", "Seamless Pastel", "E-commerce product photo of [PRODUCT] against a seamless [PASTEL COLOR] background, matching [SURFACE], soft studio light, minimal composition, clean negative space, modern skincare brand style."],
+      ["Backgrounds", "Marble Counter", "Premium product photograph of [PRODUCT] on white marble, subtle veining, soft reflections, gentle side light, elegant neutral background, crisp typography detail, luxury retail finish."],
+      ["Backgrounds", "Concrete Minimal", "Modern product photo of [PRODUCT] on matte concrete, cool gray background, soft shadows, industrial minimal styling, accurate product color, sharp commercial detail."],
+      ["Backgrounds", "Color Block Set", "Bold e-commerce image of [PRODUCT] in a color-block studio set using [COLOR 1] and [COLOR 2], geometric backdrop, clean shadows, vibrant campaign style, centered hero composition."],
+      ["Backgrounds", "Kitchen Counter", "Lifestyle product photo of [PRODUCT] on a clean kitchen counter, soft morning light, realistic home setting, uncluttered background, natural shadows, trustworthy DTC brand look."],
+      ["Backgrounds", "Tech Surface", "Sleek product image of [PRODUCT] on dark brushed metal, cool blue highlights, subtle reflection, high contrast, premium technology brand aesthetic, sharp focus."],
+      ["Backgrounds", "Paper Sweep", "Studio product photograph of [PRODUCT] on a curved paper sweep in [BACKGROUND COLOR], no horizon line, softbox lighting, gentle shadow, clean professional catalog finish."],
+
+      ["Styling", "Ingredient Surround", "Product photo of [PRODUCT] surrounded by [KEY INGREDIENTS], arranged neatly on [SURFACE], soft natural light, balanced spacing, fresh color grade, premium e-commerce styling."],
+      ["Styling", "Splash Moment", "Dynamic product photograph of [PRODUCT] with [LIQUID] splash around it, frozen motion, high-speed flash lighting, crisp droplets, clean background, energetic commercial ad style."],
+      ["Styling", "Stacked Props", "Styled product shot of [PRODUCT] elevated on blocks of [MATERIAL], layered composition, matching props in [COLOR], soft shadows, premium DTC campaign aesthetic."],
+      ["Styling", "Flat Lay Kit", "Top-down flat lay of [PRODUCT] with complementary items [PROP 1], [PROP 2], [PROP 3], tidy spacing, soft even lighting, clean background, e-commerce bundle photography."],
+      ["Styling", "Hand Model Detail", "Close product photo of a hand holding [PRODUCT], clean nails, soft studio light, blurred neutral background, realistic scale, premium brand detail shot."],
+      ["Styling", "Before After Pair", "Split composition showing [PRODUCT] beside a before-and-after visual cue, clean labels, soft studio lighting, high clarity, credible e-commerce conversion image."],
+      ["Styling", "Monochrome Set", "Product image of [PRODUCT] styled with props all in [COLOR FAMILY], tonal background, refined shadows, sophisticated monochrome brand aesthetic, sharp focus."],
+
+      ["Mood", "Fresh Morning", "Bright fresh product photo of [PRODUCT] on [SURFACE], morning light, airy shadows, pale blue and white color grade, clean wellness mood, realistic premium e-commerce finish."],
+      ["Mood", "Bold Energy", "High-energy product photograph of [PRODUCT], vibrant [COLOR] background, punchy contrast, dramatic highlights, dynamic angle, modern social ad style."],
+      ["Mood", "Calm Wellness", "Minimal wellness product photo of [PRODUCT] with soft beige and sage accents, diffused light, natural textures, quiet luxury feel, shallow depth of field."],
+      ["Mood", "Dark Premium", "Moody premium product photo of [PRODUCT] on black stone, low-key lighting, controlled highlights, deep shadows, cinematic contrast, luxury campaign look."],
+      ["Mood", "Playful Pop", "Fun product photography of [PRODUCT] with colorful props, floating elements, bright studio lighting, clean shadows, playful e-commerce ad aesthetic."],
+      ["Mood", "Eco Natural", "Natural product photo of [PRODUCT] on recycled paper and wood, greenery accents, soft daylight, earthy color grade, sustainable brand mood."],
+      ["Mood", "Clinical Clean", "Clean clinical product image of [PRODUCT] on white acrylic, cool even lighting, precise shadows, sharp label detail, trustworthy science-backed brand feel."],
+
+      ["Technical", "Macro Texture", "Macro product photograph of [PRODUCT], close focus on [TEXTURE OR FEATURE], 100mm macro lens, f/8, detailed surface texture, soft side light, premium product detail shot."],
+      ["Technical", "Three Quarter Angle", "Three-quarter product photograph of [PRODUCT] on [SURFACE], 70mm lens, f/5.6, accurate perspective, softbox lighting, realistic shadow, marketplace-ready image."],
+      ["Technical", "Depth Of Field", "Product photo of [PRODUCT] with shallow depth of field, front label tack sharp, background softly blurred, 85mm lens, f/2.8, clean studio lighting, premium ad quality."],
+      ["Technical", "Reflection Control", "Glossy product image of [PRODUCT] on reflective acrylic, controlled polarizing studio lights, clean reflection, no harsh glare, crisp product edges, professional retouching look."],
+      ["Technical", "Transparent Object", "Studio photo of transparent [PRODUCT], backlight setup, edge-defining rim lights, clean highlights, white background, accurate glass or plastic material rendering."],
+      ["Technical", "Packshot With Shadow", "Standard e-commerce packshot of [PRODUCT], front-facing, pure white background, natural contact shadow, high resolution, accurate color, sharp readable label."],
+      ["Technical", "Wide Banner Crop", "Horizontal banner image of [PRODUCT] on [SURFACE], product placed on right third, negative space on left for text, soft studio light, web hero composition, 16:9 aspect ratio."],
+
+      ["Lifestyle", "Bathroom Shelf", "Lifestyle product photo of [PRODUCT] on a clean bathroom shelf, soft towel texture, morning window light, elegant home setting, realistic shadows, skincare e-commerce style."],
+      ["Lifestyle", "Gym Bag Scene", "Lifestyle image of [PRODUCT] beside a gym bag and water bottle, energetic daylight, clean athletic styling, realistic environment, supplement or fitness brand look."],
+      ["Lifestyle", "Cafe Table", "Lifestyle product photo of [PRODUCT] on a cafe table with [PROP], soft natural light, warm background blur, casual premium mood, realistic e-commerce campaign image."],
+      ["Lifestyle", "Desk Setup", "Lifestyle product image of [PRODUCT] in a modern desk setup, laptop edge, notebook, clean workspace, cool daylight, tech or productivity brand aesthetic."],
+      ["Lifestyle", "Outdoor Picnic", "Lifestyle photo of [PRODUCT] on picnic fabric outdoors, soft sunlight, fresh props, natural color grade, realistic setting, food or beverage e-commerce style."],
+      ["Lifestyle", "Wardrobe Detail", "Fashion product photo of [PRODUCT] styled with folded fabric and accessories, soft side light, neutral background, premium boutique look, detailed texture."],
+      ["Lifestyle", "Travel Carry", "Lifestyle product shot of [PRODUCT] near a suitcase and passport, soft hotel room light, clean aspirational travel mood, polished DTC campaign style."],
+
+      ["Luxury", "Jewelry Velvet", "Luxury product photograph of [PRODUCT] on deep velvet in [COLOR], soft spotlight, refined shadows, subtle sparkle highlights, macro detail, premium jewelry campaign style."],
+      ["Luxury", "Black Marble Gold", "Luxury e-commerce image of [PRODUCT] on black marble with gold accents, dramatic side light, glossy highlights, rich contrast, high-end retail finish."],
+      ["Luxury", "Floating Luxury", "Premium product image of [PRODUCT] floating above a glossy pedestal, dark gradient background, rim lighting, soft reflection, cinematic luxury advertisement."],
+      ["Luxury", "Museum Display", "Product photo of [PRODUCT] displayed like a museum object on a clean pedestal, spotlight, soft falloff, minimal background, refined gallery aesthetic."],
+      ["Luxury", "Silk Fabric", "Elegant product photograph of [PRODUCT] on flowing silk fabric in [COLOR], soft highlights, delicate shadows, luxury beauty brand styling, sharp product focus."],
+      ["Luxury", "Champagne Glow", "Luxury product photo of [PRODUCT] with warm champagne lighting, metallic reflections, premium props, shallow depth of field, polished high-end campaign look."],
+      ["Luxury", "Ultra Minimal Premium", "Ultra-minimal product image of [PRODUCT] centered on matte [SURFACE], precise soft shadow, neutral premium background, perfect symmetry, luxury e-commerce packshot."]
+    ];
+
+    const categories = ["All", ...Array.from(new Set(prompts.map((prompt) => prompt[0])))];
+    const grid = document.getElementById("grid");
+    const filters = document.getElementById("filters");
+    const search = document.getElementById("search");
+    const count = document.getElementById("count");
+    const headerCount = document.getElementById("headerCount");
+    const empty = document.getElementById("empty");
+    let activeCategory = "All";
+
+    function renderFilters() {
+      filters.innerHTML = categories.map((category) => (
+        `<button class="filter${category === activeCategory ? " active" : ""}" data-category="${category}">${category}</button>`
+      )).join("");
+    }
+
+    function renderPrompts() {
+      const query = search.value.trim().toLowerCase();
+      const visible = prompts.filter(([category, title, prompt]) => {
+        const inCategory = activeCategory === "All" || category === activeCategory;
+        const inSearch = !query || `${category} ${title} ${prompt}`.toLowerCase().includes(query);
+        return inCategory && inSearch;
+      });
+
+      grid.innerHTML = visible.map(([category, title, prompt], index) => `
+        <details>
+          <summary>
+            <div class="card-top">
+              <div>
+                <div class="tag">${category}</div>
+                <div class="title">${String(index + 1).padStart(2, "0")}. ${title}</div>
+              </div>
+            </div>
+          </summary>
+          <div class="prompt">
+            <p>${prompt}</p>
+            <button class="copy" data-prompt="${encodeURIComponent(prompt)}">Copy Prompt</button>
+          </div>
+        </details>
+      `).join("");
+
+      count.textContent = `${visible.length} of ${prompts.length} prompts shown`;
+      headerCount.textContent = `${prompts.length} prompts`;
+      empty.style.display = visible.length ? "none" : "block";
+    }
+
+    filters.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-category]");
+      if (!button) return;
+      activeCategory = button.dataset.category;
+      renderFilters();
+      renderPrompts();
+    });
+
+    async function copyText(text) {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+
+    grid.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-prompt]");
+      if (!button) return;
+      const prompt = decodeURIComponent(button.dataset.prompt);
+      await copyText(prompt);
+      button.textContent = "Copied";
+      setTimeout(() => {
+        button.textContent = "Copy Prompt";
+      }, 1200);
+    });
+
+    search.addEventListener("input", renderPrompts);
+    renderFilters();
+    renderPrompts();
+  </script>
+</body>
+
+</html>
