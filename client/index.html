@@ -285,6 +285,59 @@
       text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
     }
 
+    .external-browser-notice {
+      display: none;
+      margin: 1rem auto 0;
+      max-width: 48rem;
+      border: 1px solid rgba(34, 211, 238, 0.38);
+      border-radius: 0.75rem;
+      background: rgba(15, 23, 42, 0.94);
+      color: #e2e8f0;
+      padding: 1rem;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+    }
+
+    .external-browser-notice.is-visible {
+      display: block;
+    }
+
+    .external-browser-notice strong {
+      display: block;
+      color: #67e8f9;
+      font-size: 0.95rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .external-browser-notice p {
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .external-browser-notice .notice-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.85rem;
+    }
+
+    .external-browser-notice a,
+    .external-browser-notice button {
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 0.65rem 0.9rem;
+    }
+
+    .external-browser-notice a {
+      background: #06b6d4;
+      color: #020617;
+    }
+
+    .external-browser-notice button {
+      border: 1px solid rgba(226, 232, 240, 0.22);
+      color: #e2e8f0;
+    }
+
     .luxury-page footer {
       background: rgba(255, 255, 255, 0.38);
       border-color: rgba(201, 161, 88, 0.22) !important;
@@ -348,6 +401,18 @@
 </head>
 
 <body class="luxury-page antialiased">
+  <div id="externalBrowserNotice" class="external-browser-notice" role="status" aria-live="polite">
+    <strong>Open this page in Chrome or Safari to pay</strong>
+    <p>
+      Instagram and WhatsApp in-app browsers can block payment apps. Tap Open in browser, or use the three-dot menu and
+      choose Open in browser.
+    </p>
+    <div class="notice-actions">
+      <a id="openExternalBrowserLink" href="#">Open in browser</a>
+      <button id="copyPageLinkBtn" type="button">Copy link</button>
+    </div>
+  </div>
+
   <header class="sticky top-0 z-20 border-b border-white/10 bg-slate-950/90 glass">
     <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
       <p class="font-semibold tracking-wide text-cyan-300">DigitalProduct</p>
@@ -522,7 +587,7 @@
       <p class="mt-3 text-slate-300">Pay once and open the interactive HTML vault instantly.</p>
       <div class="mt-8 rounded-2xl border border-cyan-400/40 bg-cyan-500/10 p-8">
         <p class="text-sm uppercase tracking-widest text-cyan-300">Special Offer</p>
-        <p id="priceText" class="mt-2 text-5xl font-extrabold">₹3</p>
+        <p id="priceText" class="mt-2 text-5xl font-extrabold">Rs. 3</p>
         <button id="buyBtn"
           class="mt-6 w-full rounded-xl bg-cyan-500 px-6 py-3 text-lg font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-60">
           Buy Now - Get Instant Access

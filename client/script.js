@@ -1,6 +1,9 @@
 const buyBtn = document.getElementById("buyBtn");
 const statusText = document.getElementById("statusText");
 const priceText = document.getElementById("priceText");
+const externalBrowserNotice = document.getElementById("externalBrowserNotice");
+const openExternalBrowserLink = document.getElementById("openExternalBrowserLink");
+const copyPageLinkBtn = document.getElementById("copyPageLinkBtn");
 const defaultOrigin = window.location.protocol === "file:" ? "http://localhost:5000" : window.location.origin;
 const inferredBackend = window.location.hostname === "productprompts.netlify.app"
   ? "https://decipline-2.onrender.com"
@@ -13,6 +16,53 @@ let productConfig = {
   productName: "Product Photography AI Prompt Vault",
   currency: "INR"
 };
+const inAppBrowser = detectInAppBrowser();
+
+function detectInAppBrowser() {
+  const userAgent = navigator.userAgent || "";
+  const loweredAgent = userAgent.toLowerCase();
+  return {
+    isInstagram: loweredAgent.includes("instagram"),
+    isWhatsapp: loweredAgent.includes("whatsapp"),
+    isAndroid: loweredAgent.includes("android"),
+    isIOS: /iphone|ipad|ipod/i.test(userAgent)
+  };
+}
+
+function isProblemInAppBrowser() {
+  return inAppBrowser.isInstagram || inAppBrowser.isWhatsapp;
+}
+
+function buildExternalBrowserUrl() {
+  const currentUrl = window.location.href;
+  if (!inAppBrowser.isAndroid) {
+    return currentUrl;
+  }
+
+  const pageUrl = new URL(currentUrl);
+  const scheme = pageUrl.protocol.replace(":", "");
+  return `intent://${pageUrl.host}${pageUrl.pathname}${pageUrl.search}${pageUrl.hash}#Intent;scheme=${scheme};package=com.android.chrome;end`;
+}
+
+function showExternalBrowserNotice(message = "") {
+  if (externalBrowserNotice) {
+    externalBrowserNotice.classList.add("is-visible");
+  }
+
+  if (message) {
+    setLoadingState(false, message);
+  }
+}
+
+async function copyPageLink() {
+  const pageUrl = window.location.href;
+  try {
+    await navigator.clipboard.writeText(pageUrl);
+    setLoadingState(false, "Link copied. Paste it in Chrome or Safari to complete payment.");
+  } catch (error) {
+    setLoadingState(false, pageUrl);
+  }
+}
 
 function absoluteApiUrl(path) {
   return new URL(path, API_BASE_URL).toString();
@@ -84,6 +134,11 @@ async function verifyPayment(paymentResponse) {
 
 async function startPayment() {
   try {
+    if (isProblemInAppBrowser()) {
+      showExternalBrowserNotice("Please open this page in Chrome or Safari before payment.");
+      return;
+    }
+
     if (typeof Razorpay === "undefined") {
       throw new Error("Payment checkout could not load. Please refresh and try again.");
     }
@@ -144,6 +199,18 @@ async function startPayment() {
     console.error(error);
     setLoadingState(false, error?.message || "Something went wrong. Please try again.");
   }
+}
+
+if (openExternalBrowserLink) {
+  openExternalBrowserLink.href = buildExternalBrowserUrl();
+}
+
+if (copyPageLinkBtn) {
+  copyPageLinkBtn.addEventListener("click", copyPageLink);
+}
+
+if (isProblemInAppBrowser()) {
+  showExternalBrowserNotice();
 }
 
 buyBtn.addEventListener("click", startPayment);
