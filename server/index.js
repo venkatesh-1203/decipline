@@ -12,7 +12,7 @@ const app = express();
 const PORT = Number(process.env.PORT || 5000);
 const FRONTEND_URL = process.env.FRONTEND_URL || "https://productprompts.netlify.app/";
 const PRODUCT_NAME = process.env.PRODUCT_NAME || "Discipline Blueprint PDF";
-const PRODUCT_PRICE_INR = 3;
+const PRODUCT_PRICE_INR = 48;
 const PRODUCT_PDF_PATH =
   process.env.PRODUCT_PDF_PATH || path.join(__dirname, "products", "You.pdf");
 const PRODUCT_DOWNLOAD_URL =
