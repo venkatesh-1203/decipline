@@ -52,7 +52,7 @@ digitalproduct/
    - `RAZORPAY_KEY_ID=your_key_id`
    - `RAZORPAY_KEY_SECRET=your_key_secret`
    - `FRONTEND_URL=http://localhost:5500` (or your frontend URL)
-   - `PRODUCT_PRICE_INR=49`
+   - `PRODUCT_PRICE_INR=3`
    - `PRODUCT_PDF_PATH=D:/You.pdf` (or correct absolute path)
    - `PRODUCT_DOWNLOAD_URL=https://drive.google.com/uc?export=download&id=your_file_id` (hosted fallback for Render)
    - `DOWNLOAD_TOKEN_SECRET=your_random_secret`

@@ -1,3 +1,8 @@
 {
-    "liveServer.settings.port": 5504
+    "liveServer.settings.port": 5504,
+    "builder.serverUrl": "https://productprompts.netlify.app/",
+    "builder.command": "",
+    "builder.runDevServer": false,
+    "builder.autoDetectDevServer": true,
+    "builder.launchType": "editor"
 }

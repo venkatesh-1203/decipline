@@ -2,7 +2,7 @@ const buyBtn = document.getElementById("buyBtn");
 const statusText = document.getElementById("statusText");
 const priceText = document.getElementById("priceText");
 const defaultOrigin = window.location.protocol === "file:" ? "http://localhost:5000" : window.location.origin;
-const inferredBackend = window.location.hostname === "deciplinetrackee.netlify.app"
+const inferredBackend = window.location.hostname === "productprompts.netlify.app"
   ? "https://decipline-2.onrender.com"
   : window.location.hostname === "decipline-2.onrender.com"
     ? window.location.origin
