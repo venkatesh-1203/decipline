@@ -11,15 +11,17 @@ dotenv.config();
 const app = express();
 const PORT = Number(process.env.PORT || 5000);
 const FRONTEND_URL = process.env.FRONTEND_URL || "https://productprompts.netlify.app/";
-const PRODUCT_NAME = process.env.PRODUCT_NAME || "Discipline Blueprint PDF";
-const PRODUCT_PRICE_INR = 48;
-const PRODUCT_PDF_PATH =
-  process.env.PRODUCT_PDF_PATH || path.join(__dirname, "products", "You.pdf");
+const PRODUCT_NAME = process.env.PRODUCT_NAME || "Product Photography AI Prompt Vault";
+const PRODUCT_CURRENCY = "INR";
+const PRODUCT_PRICE_INR = parsePositiveInteger(process.env.PRODUCT_PRICE_INR, 48);
+const PRODUCT_PDF_PATH = resolveFilePath(
+  process.env.PRODUCT_PDF_PATH,
+  path.join(__dirname, "..", "client", "product-photography-ai-prompt-vault.pdf")
+);
 const PRODUCT_DOWNLOAD_URL =
   process.env.PRODUCT_DOWNLOAD_URL ||
-  "https://drive.google.com/uc?export=download&id=1zOWamDlF3fF297n6BhFvuoyImSky1XdC";
-const DOWNLOAD_TOKEN_SECRET =
-  process.env.DOWNLOAD_TOKEN_SECRET || process.env.RAZORPAY_KEY_SECRET || "fallback_secret";
+  "https://productprompts.netlify.app/product-photography-ai-prompt-vault.pdf";
+const DOWNLOAD_TOKEN_SECRET = getDownloadTokenSecret();
 
 if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
   console.warn("Missing Razorpay keys. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in .env");
@@ -29,6 +31,48 @@ const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID || "",
   key_secret: process.env.RAZORPAY_KEY_SECRET || ""
 });
+
+function parsePositiveInteger(value, fallbackValue) {
+  const parsedValue = Number(value);
+  if (Number.isInteger(parsedValue) && parsedValue > 0) {
+    return parsedValue;
+  }
+
+  return fallbackValue;
+}
+
+function resolveFilePath(configuredPath, fallbackPath) {
+  if (!configuredPath) {
+    return fallbackPath;
+  }
+
+  if (path.isAbsolute(configuredPath)) {
+    return configuredPath;
+  }
+
+  return path.resolve(__dirname, configuredPath);
+}
+
+function getDownloadTokenSecret() {
+  const configuredSecret = process.env.DOWNLOAD_TOKEN_SECRET || process.env.RAZORPAY_KEY_SECRET;
+  const placeholderSecrets = new Set([
+    "fallback_secret",
+    "replace_with_a_long_random_secret",
+    "change_me",
+    "your_random_secret"
+  ]);
+
+  if (configuredSecret && configuredSecret.length >= 32 && !placeholderSecrets.has(configuredSecret)) {
+    return configuredSecret;
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("Set DOWNLOAD_TOKEN_SECRET to a long random value before running in production.");
+  }
+
+  console.warn("Using development download token secret. Set DOWNLOAD_TOKEN_SECRET for production.");
+  return "local_development_download_secret_change_before_deploy";
+}
 
 function normalizeOrigin(origin) {
   if (!origin) {
@@ -46,12 +90,14 @@ const allowedOrigins = new Set(
     "http://localhost:3000",
     "http://localhost:5000",
     "http://127.0.0.1:3000",
-    "http://127.0.0.1:5000",
-    "null"
+    "http://127.0.0.1:5000"
   ].map(normalizeOrigin)
 );
 
-// CORS configuration with origin validation
+if (process.env.NODE_ENV !== "production") {
+  allowedOrigins.add("null");
+}
+
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) {
@@ -81,9 +127,18 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
+app.set("trust proxy", 1);
+app.set("query parser", "simple");
+app.disable("x-powered-by");
+app.use((_, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  next();
+});
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
-app.use(express.json());
+app.use(express.json({ limit: "20kb" }));
 
 function base64UrlEncode(input) {
   return Buffer.from(input)
@@ -121,7 +176,12 @@ function verifyDownloadToken(token) {
     .update(encodedPayload)
     .digest("hex");
 
-  if (signature !== expectedSignature) {
+  const expectedBuffer = Buffer.from(expectedSignature, "hex");
+  const signatureBuffer = Buffer.from(signature, "hex");
+  if (
+    expectedBuffer.length !== signatureBuffer.length ||
+    !crypto.timingSafeEqual(expectedBuffer, signatureBuffer)
+  ) {
     throw new Error("Invalid token signature");
   }
 
@@ -145,7 +205,7 @@ app.get("/api/config", (_, res) => {
   res.json({
     razorpayKeyId: process.env.RAZORPAY_KEY_ID || "",
     productPriceInr: PRODUCT_PRICE_INR,
-    currency: "INR",
+    currency: PRODUCT_CURRENCY,
     productName: PRODUCT_NAME
   });
 });
@@ -157,7 +217,7 @@ app.post("/api/create-order", async (req, res) => {
 
     const order = await razorpay.orders.create({
       amount,
-      currency: "INR",
+      currency: PRODUCT_CURRENCY,
       receipt,
       notes: {
         product: PRODUCT_NAME
@@ -195,7 +255,12 @@ app.post("/api/verify-payment", async (req, res) => {
       .update(`${razorpay_order_id}|${razorpay_payment_id}`)
       .digest("hex");
 
-    if (generatedSignature !== razorpay_signature) {
+    const generatedSignatureBuffer = Buffer.from(generatedSignature, "hex");
+    const razorpaySignatureBuffer = Buffer.from(razorpay_signature, "hex");
+    if (
+      generatedSignatureBuffer.length !== razorpaySignatureBuffer.length ||
+      !crypto.timingSafeEqual(generatedSignatureBuffer, razorpaySignatureBuffer)
+    ) {
       return res.status(400).json({
         success: false,
         message: "Payment verification failed. Signature mismatch."
@@ -204,7 +269,13 @@ app.post("/api/verify-payment", async (req, res) => {
 
     // Extra safety: fetch payment from Razorpay and verify relation + capture status.
     const payment = await razorpay.payments.fetch(razorpay_payment_id);
-    if (!payment || payment.order_id !== razorpay_order_id || payment.status !== "captured") {
+    if (
+      !payment ||
+      payment.order_id !== razorpay_order_id ||
+      payment.status !== "captured" ||
+      payment.amount !== PRODUCT_PRICE_INR * 100 ||
+      payment.currency !== PRODUCT_CURRENCY
+    ) {
       return res.status(400).json({
         success: false,
         message: "Payment verification failed. Invalid payment state."
@@ -250,7 +321,18 @@ app.get("/download", (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+module.exports = {
+  app,
+  createDownloadToken,
+  normalizeOrigin,
+  parsePositiveInteger,
+  resolveFilePath,
+  verifyDownloadToken
+};
 

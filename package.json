@@ -5,7 +5,8 @@
   "description": "Static frontend build tooling for the digital product site",
   "scripts": {
     "build:css": "tailwindcss -i ./client/input.css -o ./client/styles.css --minify",
-    "watch:css": "tailwindcss -i ./client/input.css -o ./client/styles.css --watch"
+    "watch:css": "tailwindcss -i ./client/input.css -o ./client/styles.css --watch",
+    "test": "node --check client/script.js && npm --prefix server test"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.17"

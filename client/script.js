@@ -11,7 +11,6 @@ const inferredBackend = window.location.hostname === "productprompts.netlify.app
     ? window.location.origin
     : defaultOrigin;
 const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || inferredBackend;
-const vaultFileUrl = "./ecommerce_product_photography_prompt_pack.html";
 let productConfig = {
   productName: "Product Photography AI Prompt Vault",
   currency: "INR"
@@ -164,11 +163,11 @@ async function startPayment() {
       handler: async function (response) {
         try {
           setLoadingState(true, "Verifying your payment...");
-          await verifyPayment(response);
+          const verification = await verifyPayment(response);
 
-          const vaultUrl = new URL(vaultFileUrl, window.location.href);
-          vaultUrl.searchParams.set("download", "pdf");
-          window.location.href = vaultUrl.toString();
+          const successUrl = new URL("./success.html", window.location.href);
+          successUrl.searchParams.set("download", absoluteApiUrl(verification.downloadUrl));
+          window.location.href = successUrl.toString();
         } catch (error) {
           console.error(error);
           const failedUrl = new URL("./failed.html", window.location.href);

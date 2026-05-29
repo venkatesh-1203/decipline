@@ -8,7 +8,7 @@
   </head>
   <body class="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-slate-100">
     <div class="w-full max-w-lg rounded-2xl border border-red-400/40 bg-slate-900 p-8 text-center">
-      <p class="text-5xl">⚠️</p>
+      <p class="text-5xl" aria-hidden="true">&#9888;</p>
       <h1 class="mt-4 text-3xl font-bold">Payment Failed</h1>
       <p id="reasonText" class="mt-3 text-slate-300">Something interrupted the payment. Please try again.</p>
       <a
@@ -26,6 +26,8 @@
 
       if (reason === "verification_failed") {
         reasonText.textContent = "Payment was received but verification failed. Contact support if money was deducted.";
+      } else if (reason === "payment_failed") {
+        reasonText.textContent = "Payment failed or was cancelled. Please try again from a regular browser.";
       }
     </script>
   </body>
